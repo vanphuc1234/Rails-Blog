@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Api::V1::Base => '/'
+
   resources :articles do
     resources :comments
   end
