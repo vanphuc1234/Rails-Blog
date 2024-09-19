@@ -14,7 +14,7 @@ gem 'pg', '~> 1.5.8'
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '>= 5.0'
 
-gem 'grape', '~> 2.2'
+gem 'grape'
 gem 'grape-swagger'
 gem 'grape-swagger-rails'
 

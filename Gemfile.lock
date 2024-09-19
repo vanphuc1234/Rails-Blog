@@ -277,7 +277,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
-  grape (~> 2.2)
+  grape
   grape-swagger
   grape-swagger-rails
   htmlbeautifier

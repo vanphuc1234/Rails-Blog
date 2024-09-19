@@ -3,6 +3,7 @@ module Api
     class Articles < Grape::API
       resource :articles do
         desc 'Return all article'
+
         get do
           Article.limit(10)
         end
