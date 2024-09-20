@@ -15,8 +15,11 @@ gem 'pg', '~> 1.5.8'
 gem 'puma', '>= 5.0'
 
 gem 'grape'
+gem 'grape-jbuilder'
 gem 'grape-swagger'
 gem 'grape-swagger-rails'
+
+gem 'hashie'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem 'importmap-rails'

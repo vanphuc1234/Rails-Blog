@@ -1,24 +1,24 @@
 module Api
   module V1
     class Articles < Grape::API
+      formatter :json, Grape::Formatter::Jbuilder
+
       resource :articles do
         desc 'Return all article'
-        get do
-          all_articles = Article.all
-          articles_count = Article.count(:id)
-          { 'success': true,
-            'count': articles_count,
-            'data': all_articles }
+        params do
+          requires :page, type: Integer, description: 'Page'
+          optional :per_page, type: Integer, description: 'Per page', default: 3
+        end
+        get '', jbuilder: 'index' do
+          limit = params[:per_page]
+          offset = (params[:page] - 1) * limit
+          @all_articles = Article.offset(offset).limit(limit)
+          @articles_count = Article.count(:id)
         end
 
         desc 'Return an article'
-        get ':id' do
-          article = Article.find_by_id(params[:id])
-          if article
-            { 'success': true, 'data': article }
-          else
-            { 'message': 'Data not found' }
-          end
+        get ':id', jbuilder: 'show_article' do
+          @article = Article.find_by_id(params[:id])
         end
 
         desc 'Post new article' do
@@ -27,12 +27,9 @@ module Api
           requires :title, type: String, description: 'Title'
           requires :description, type: String, description: 'Description'
         end
-        post do
-          article = Article.new(title: params[:title], text: params[:description])
-          article.save
-          return { 'message': article.errors.full_messages.to_sentence } unless article.errors.blank?
-
-          { 'success': true, 'data': article }
+        post '', jbuilder: 'new_article' do
+          @article = Article.new(title: params[:title], text: params[:description])
+          @article.save
         end
 
         desc 'Update an article' do
@@ -41,14 +38,14 @@ module Api
           requires :title, type: String, description: 'Title'
           requires :description, type: String, description: 'Description'
         end
-        put ':id' do
-          article = Article.find_by_id(params[:id])
-          return { 'message': 'Data not found' } unless article
+        put ':id', jbuilder: 'edit_article' do
+          @article = Article.find_by_id(params[:id])
+          # return { 'message': 'Data not found' } unless article
 
-          article.update(title: params[:title], text: params[:description])
-          return { 'message': article.errors.full_messages.to_sentence } unless article.errors.blank?
+          @article.update(title: params[:title], text: params[:description])
+          # return { 'message': article.errors.full_messages.to_sentence } unless article.errors.blank?
 
-          { 'success': true, 'message': 'Update succesfully article', 'data': article }
+          # { 'success': true, 'message': 'Update succesfully article', 'data': article }
         end
 
         desc 'Delete an article' do
