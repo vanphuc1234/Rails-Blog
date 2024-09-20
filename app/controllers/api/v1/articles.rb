@@ -3,7 +3,6 @@ module Api
     class Articles < Grape::API
       resource :articles do
         desc 'Return all article'
-
         get do
           all_articles = Article.all
           articles_count = Article.count(:id)
