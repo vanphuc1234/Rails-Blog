@@ -6,13 +6,13 @@ module Api
       resource :articles do
         desc 'Return all article'
         params do
-          requires :page, type: Integer, description: 'Page'
-          optional :per_page, type: Integer, description: 'Per page', default: 3
+          requires :page, type: Integer, description: 'Page', default: 1
+          optional :per_page, type: Integer, description: 'Per page', default: 5
         end
         get '', jbuilder: 'index' do
           limit = params[:per_page]
           offset = (params[:page] - 1) * limit
-          @all_articles = Article.offset(offset).limit(limit)
+          @all_articles = Article.offset(offset).limit(limit).order(:id)
           @articles_count = Article.count(:id)
         end
 
@@ -38,14 +38,14 @@ module Api
           requires :title, type: String, description: 'Title'
           requires :description, type: String, description: 'Description'
         end
-        put ':id', jbuilder: 'edit_article' do
+        put ':id' do
           @article = Article.find_by_id(params[:id])
-          # return { 'message': 'Data not found' } unless article
+          return { 'message': 'Data not found' } unless @article
 
           @article.update(title: params[:title], text: params[:description])
-          # return { 'message': article.errors.full_messages.to_sentence } unless article.errors.blank?
+          return { 'message': @article.errors.full_messages.to_sentence } unless @article.errors.blank?
 
-          # { 'success': true, 'message': 'Update succesfully article', 'data': article }
+          env['api.tilt.template'] = 'edit_article'
         end
 
         desc 'Delete an article' do
