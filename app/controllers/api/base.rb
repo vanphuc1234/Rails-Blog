@@ -5,6 +5,7 @@ module Api
     version 'v1', using: :path
 
     format :json
+    formatter :json, Grape::Formatter::Jbuilder
     prefix :api
 
     mount Api::V1::Base

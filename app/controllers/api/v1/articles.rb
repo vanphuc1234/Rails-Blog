@@ -1,8 +1,6 @@
 module Api
   module V1
     class Articles < Grape::API
-      formatter :json, Grape::Formatter::Jbuilder
-
       resource :articles do
         desc 'Return all article'
         params do
